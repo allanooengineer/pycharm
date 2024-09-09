@@ -1,0 +1,43 @@
+from assignment import SmochaStand, MenuItems, InvalidSalesItemError
+import unittest2 as unittest
+
+class TestSmochaStand(unittest.TestCase):
+
+    def setUp(self):
+        self.stand = SmochaStand("Muthurwo", "Kayole")
+        self.item1 = MenuItems('Smotcha', 55.00, 75.00)
+        self.item2 = MenuItems('HotDog', 50.00, 65.00)
+        self.item3 = MenuItems('Chai', 100.00, 65.00)
+        self.stand.add_menu_item(self.item1)
+        self.stand.add_menu_item(self.item2)
+        self.stand.add_menu_item(self.item3)
+
+    def test_total_profit_for_menu_item(self):
+        day_0_sales = {
+            'Smotcha': 17,
+            'HotDog': 25
+        }
+        self.stand.enter_sales_for_today(day_0_sales)
+        expected_smotcha_profit = 17 * (75.00 - 55.00)  # 17 * 20.00 = 340.00
+        expected_hotdog_profit = 25 * (65.00 - 50.00)  # 25 * 15.00 = 375.00
+        self.assertEqual(self.stand.total_profit_for_menu_item('Smotcha'), expected_smotcha_profit)
+        self.assertEqual(self.stand.total_profit_for_menu_item('HotDog'), expected_hotdog_profit)
+
+    def test_invalid_sales_item(self):
+        day_0_sales = {
+            'Burger': 10
+        }
+        with self.assertRaises(InvalidSalesItemError):
+            self.stand.enter_sales_for_today(day_0_sales)
+
+    def test_total_profit_for_stand(self):
+        day_0_sales = {
+            'Smotcha': 17,
+            'HotDog': 25
+        }
+        self.stand.enter_sales_for_today(day_0_sales)
+        expected_total_profit = (17 * (75.00 - 55.00)) + (25 * (65.00 - 50.00))  # 340.00 + 375.00 = 715.00
+        self.assertEqual(self.stand.total_profit_for_stand(), expected_total_profit)
+
+if __name__ == '__main__':
+    unittest.main()
